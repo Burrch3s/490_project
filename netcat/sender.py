@@ -3,7 +3,7 @@
 import sys
 import socket
 import threading
-from subprocess import call
+import subprocess
 
 '''
 #cant gracefully close yet
@@ -84,7 +84,6 @@ class Netcat:
 
             except:
                 print('[*] Session ended, exiting now')
-                client.close()
                 sys.exit(0)
 
     def _run_command(self, command=None):
@@ -92,7 +91,9 @@ class Netcat:
         print(command)
         try:
             print(command)
-            output = call([str(command)])
+            #output = call([str(command)])
+            pid = subprocess.call(str(command), shell=True)
+            print pid
             print output
 
         except:
