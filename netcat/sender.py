@@ -7,8 +7,6 @@ import subprocess
 
 '''
 #cant gracefully close yet
-#cant accept multiple strings for command execution yet
-#fix these
 '''
 
 class Netcat:
@@ -32,23 +30,24 @@ class Netcat:
         )
         sys.exit(0)
 
-    def _client_sender(self, target=None, port=None):
+    def _client_sender(self, target=None, port=None, buf=None):
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             client.connect((target,port))
 
             send_stuff = True
             while send_stuff:
-                buffer = ''
-                buffer = sys.stdin.read()
+                # buffer = ''
+                # buffer = sys.stdin.read()
                 # buffer += '\n'
-                if len(buffer):
-                    buffer += '\n'
-                    client.send(buffer.encode())
-
+                if len(buf):
+                    buf += '\n'
+                    client.send(buf.encode())
+                    client.close()
+                    send_stuff = False
                 else:
                     client.close()
-                    sys.exit(0)
+                    # sys.exit(0)
 
         except:
             # add better error handling?
@@ -101,12 +100,12 @@ class Netcat:
 
         return output
 
-    def netcat(self, target=None, port=None, listen=False):
-        if (not target) | (not port):
+    def netcat(self, target=None, port=None, listen=False, buf=None):
+        if (not target) | (not port) | (not buf):
             self.usage(cls='err')
 
         if not listen and len(target) and port > 0:
-            self._client_sender(target, port)
+            self._client_sender(target, port, buf)
 
         if listen:
             self._server_loop(target, port)

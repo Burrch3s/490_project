@@ -75,7 +75,7 @@ while True:
     if ACCx >= 2 or ACCy >= 2 or ACCz >= 2:
         var = "./src/chuck playwav.ck"
         #send cmd
-        #x.netcat(target='target',port=9999,cmd=var)
+        x.netcat(target='target',port=9999,buf=var)
     # print("##### X = %f G  #####" % ((ACCx * 0.244) / 1000)),
     # print(" Y =   %fG  #####" % ((ACCy * 0.244) / 1000)),
     # print(" Z =  %fG  #####" % ((ACCz * 0.244) / 1000))
