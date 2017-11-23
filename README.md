@@ -7,7 +7,7 @@ netcat connection) where my receiving program shall execute the command and crea
 synthesized or fed to the chuck program. :ok_hand:
 
 #TODO
-- finish python netcat connection(listener/command executioner)
+- convert from CL utility to importable class(input method to send off changes basically)
 
 - finish first mode: interpret sudden acceleration into punches in chuck
     (Pi side)
@@ -15,7 +15,7 @@ synthesized or fed to the chuck program. :ok_hand:
     import Netcat class
     detect then compile command to be sent across NC conn to laptop(async conn)
     (Laptop side)
-    successfully execute command with multiple arguments(and not just ls lol)
+    
     
 - finish second mode: interpret tilt/rotation into increase in freq./amplitude
     (Pi side)
