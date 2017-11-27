@@ -58,7 +58,7 @@ class Netcat:
 
         global server
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #server.bind((target,port))
+        server.bind((target,port))
         server.listen(5)
         loop = True
 
