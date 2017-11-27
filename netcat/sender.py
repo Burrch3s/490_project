@@ -31,11 +31,12 @@ class Netcat:
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             client.connect((target,port))
-
+            print("connected")
             send_stuff = True
             while send_stuff:
                 if len(buf):
                     buf += '\n'
+                    print("theres length here")
                     client.send(buf.encode())
                     client.close()
                     send_stuff = False
