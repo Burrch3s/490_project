@@ -61,14 +61,13 @@ def readACCz():
 # initialise the accelerometer
 writeACC(CTRL_REG1_XM, 0b01100111)  # z,y,x axis enabled, continuos update,  100Hz data rate
 writeACC(CTRL_REG2_XM, 0b00011000)  # +/- 8G full scale
-target = str(sys.argv[1])
 
 while True:
     # Read the accelerometer,gyroscope and magnetometer values
     # Establish NC connection
     # When spike occurs send command to run wav file
     x = Netcat()
-    target = sys.argv[1]
+    target = str(sys.argv[1])
     # x.netcat(target='target', port=9999)
     # change netcat func to use variable as obj were sending
     ACCx = (readACCx() * 0.244) / 1000
