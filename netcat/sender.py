@@ -38,7 +38,7 @@ class Netcat:
             while send_stuff:
                 if len(buf):
                     buf += '\n'
-                    # print("theres length here")
+                    print("theres length here")
                     client.send(buf.encode())
 
                     if 'quit' in buf:
@@ -53,7 +53,9 @@ class Netcat:
                     print('[*] Client quit the session!')
                     sys.exit(0)
 
-                buf = raw_input()
+                # buf = raw_input()
+                send_stuff = False
+                return
 
         except Exception as e: 
             print(e)
@@ -74,7 +76,10 @@ class Netcat:
 
         while loop:
             client_socket, addr = server.accept()
-            self._client_handler(client_socket)
+
+            if client_socket:
+                self._client_handler(client_socket)
+            # self._client_handler(client_socket)
             # client_socket.close()
             # loop = False
 
@@ -89,13 +94,17 @@ class Netcat:
                 while '\n' not in cmd_buffer:
                     cmd_buffer += client_socket.recv(4096)
 
-                    if 'quit' in cmd_buffer:
-                        client_socket.close()
-                        print('[*] Client closed session!!')
-                        sys.exit(0)
+                    # if 'quit' in cmd_buffer:
+                    #     client_socket.close()
+                    #     print('[*] Client closed session!!')
+                    #     sys.exit(0)
+                    #
+                    # else:
+                    if cmd_buffer:
+                        response = self._run_command(cmd_buffer)
 
                     else:
-                        response = self._run_command(cmd_buffer)
+                        return
                     # client_socket.close()
                     # loop = False
 
@@ -105,6 +114,9 @@ class Netcat:
                 loop = False
                 client_socket.close()
                 sys.exit(0)
+
+            loop = False
+            return
 
     def _run_command(self, command=None):
         command = command.rstrip()
@@ -132,4 +144,5 @@ class Netcat:
         if listen:
             self._server_loop(target, port)
 
-        self.usage(cls='err')
+        return 0
+        # self.usage(cls='err')
