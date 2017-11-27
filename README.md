@@ -9,17 +9,12 @@ synthesized or fed to the chuck program. :ok_hand:
 #TODO
 
 - finish first mode: interpret sudden acceleration into punches in chuck
-    choose random .wav file to play: choose on pi side, or laptop side. perhaps ck
-    can allow for conditions and a rnd num for choosing the .wav, or pi will have the
-    .wav files hard coded and randomly choose between them to play
-    (Pi side)
-    (Laptop side)
-    
+    solder berryIMU
+    collect sensor data
+    present data and correlate data to gesture/movement
     
 - finish second mode: interpret tilt/rotation into increase in freq./amplitude
     (Pi side)
-    create python script to interpret sensor data collection
-    import Netcat class
     detect then compile command into chuck program adjustment
     (Laptop side)
     execute chuck cmd and file
