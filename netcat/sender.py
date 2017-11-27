@@ -94,14 +94,14 @@ class Netcat:
                 while '\n' not in cmd_buffer:
                     cmd_buffer += client_socket.recv(4096)
 
-                    # if 'quit' in cmd_buffer:
-                    #     client_socket.close()
-                    #     print('[*] Client closed session!!')
-                    #     sys.exit(0)
-                    #
-                    # else:
-                    if cmd_buffer:
-                        response = self._run_command(cmd_buffer)
+                    if 'quit' in cmd_buffer:
+                        client_socket.close()
+                        print('[*] Client closed session!!')
+                        sys.exit(0)
+
+                    elif cmd_buffer:
+                        if cmd_buffer:
+                            response = self._run_command(cmd_buffer)
 
                     else:
                         return
