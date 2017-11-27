@@ -7,13 +7,11 @@ netcat connection) where my receiving program shall execute the command and crea
 synthesized or fed to the chuck program. :ok_hand:
 
 #TODO
-- convert from CL utility to importable class(input method to send off changes basically)
 
 - finish first mode: interpret sudden acceleration into punches in chuck
     (Pi side)
-    create python script to interpret sensor data collection
-    import Netcat class
-    detect then compile command to be sent across NC conn to laptop(async conn)
+    detect then compile command to be sent across NC conn to laptop(async conn) *almost done
+    endlessly detect until ctrl-c, then close connection
     (Laptop side)
     
     
@@ -28,3 +26,4 @@ synthesized or fed to the chuck program. :ok_hand:
 #IMPROVEMENTS
 - solder berryIMU together, get battery pack for Pi to make it a crappy wearable (lol)
 - idk wait a bit come back and write more
+- write the second mode and allow seamless switching between the 2

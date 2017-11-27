@@ -5,6 +5,8 @@ import socket
 import threading
 import subprocess
 
+#TODO: fix lame broad try/excepts
+#TODO: send stuff until ctrl-c then close connection
 
 class Netcat:
     def __init__(self, listener=False, target=None, port=None):
@@ -31,19 +33,27 @@ class Netcat:
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             client.connect((target,port))
-            print("connected")
+            # print("connected")
             send_stuff = True
             while send_stuff:
                 if len(buf):
                     buf += '\n'
-                    print("theres length here")
+                    # print("theres length here")
                     client.send(buf.encode())
-                    client.close()
-                    send_stuff = False
+
+                    if 'quit' in buf:
+                        send_stuff = False
+                        client.close()
+                        print('[*] Client quit the session!!')
+                        sys.exit(0)
 
                 else:
+                    send_stuff = False
                     client.close()
-                    # sys.exit(0)
+                    print('[*] Client quit the session!')
+                    sys.exit(0)
+
+                buf = raw_input()
 
         except Exception as e: 
             print(e)
@@ -65,8 +75,8 @@ class Netcat:
         while loop:
             client_socket, addr = server.accept()
             self._client_handler(client_socket)
-            client_socket.close()
-            loop = False
+            # client_socket.close()
+            # loop = False
 
         client_socket.close()
         sys.exit(9)
@@ -78,13 +88,23 @@ class Netcat:
                 cmd_buffer = ''
                 while '\n' not in cmd_buffer:
                     cmd_buffer += client_socket.recv(4096)
-                    response = self._run_command(cmd_buffer)
-                    client_socket.close()
-                    loop = False
 
-            except:
+                    if 'quit' in cmd_buffer:
+                        client_socket.close()
+                        print('[*] Client closed session!!')
+                        sys.exit(0)
+
+                    else:
+                        response = self._run_command(cmd_buffer)
+                    # client_socket.close()
+                    # loop = False
+
+            except Exception as e:
+                print(e)
                 print('[*] Session ended, exiting now')
                 loop = False
+                client_socket.close()
+                sys.exit(0)
 
     def _run_command(self, command=None):
         command = command.rstrip()
@@ -94,10 +114,13 @@ class Netcat:
             pid = subprocess.call(str(command), shell=True)
             print pid
 
-        except:
+        except Exception as e:
+            print(e)
             output = "Failed to execute command\n"
+            return output
 
-        return output
+        return
+
 
     def netcat(self, target=None, port=None, listen=False, buf=None):
         if (not port):
