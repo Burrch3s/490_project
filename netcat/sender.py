@@ -45,7 +45,8 @@ class Netcat:
                     client.close()
                     # sys.exit(0)
 
-        except:
+        except Exception as e: 
+            print(e)
             # add better error handling?
             client.close()
             print('[*] Exception! Exiting')
@@ -53,11 +54,11 @@ class Netcat:
 
     def _server_loop(self, target=None, port=None):
         if not len(target):
-            target = '127.0.0.1'
+            target = '0.0.0.0'
 
         global server
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.bind((target,port))
+        #server.bind((target,port))
         server.listen(5)
         loop = True
 
@@ -70,7 +71,7 @@ class Netcat:
         client_socket.close()
         sys.exit(9)
     def _client_handler(self, client_socket=None):
-    loop = True
+        loop = True
 
         while loop:
             try:
@@ -99,7 +100,7 @@ class Netcat:
         return output
 
     def netcat(self, target=None, port=None, listen=False, buf=None):
-        if (not target) | (not port):
+        if (not port):
             self.usage(cls='err')
 
         if not listen and len(target) and port > 0 and buf:
