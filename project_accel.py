@@ -62,23 +62,31 @@ def readACCz():
 writeACC(CTRL_REG1_XM, 0b01100111)  # z,y,x axis enabled, continuos update,  100Hz data rate
 writeACC(CTRL_REG2_XM, 0b00011000)  # +/- 8G full scale
 
-while True:
+target = str(sys.argv[1])
+loop = True
+while loop:
     # Read the accelerometer,gyroscope and magnetometer values
     # Establish NC connection
     # When spike occurs send command to run wav file
     x = Netcat()
-    target = str(sys.argv[1])
     # x.netcat(target='target', port=9999)
     # change netcat func to use variable as obj were sending
-    ACCx = (readACCx() * 0.244) / 1000
-    ACCy = (readACCy() * 0.244) / 1000
-    ACCz = (readACCz() * 0.244) / 1000
+    try:
+        ACCx = (readACCx() * 0.244) / 1000
+        ACCy = (readACCy() * 0.244) / 1000
+        ACCz = (readACCz() * 0.244) / 1000
 
 
-    if ACCx >= 2 or ACCy >= 2 or ACCz >= 2:
-        var = "./chuck playwav.ck"
-        #send cmd
-        x.netcat(target=target, port=9999, buf=var)
+        if ACCx >= 2 or ACCy >= 2 or ACCz >= 2:
+            var = "./src/chuck playwav.ck"
+            #send cmd
+            x.netcat(target=target, port=9999, buf=var)
+
+    except KeyboardInterrupt:
+        var = 'quit'
+        x.netcat(target=target, port=9990, buf=var)
+        print('We exited the session')
+        sys.exit(0)
     # print("##### X = %f G  #####" % ((ACCx * 0.244) / 1000)),
     # print(" Y =   %fG  #####" % ((ACCy * 0.244) / 1000)),
     # print(" Z =  %fG  #####" % ((ACCz * 0.244) / 1000))
