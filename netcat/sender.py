@@ -5,9 +5,6 @@ import socket
 import threading
 import subprocess
 
-'''
-#cant gracefully close yet
-'''
 
 class Netcat:
     def __init__(self, listener=False, target=None, port=None):
@@ -37,14 +34,12 @@ class Netcat:
 
             send_stuff = True
             while send_stuff:
-                # buffer = ''
-                # buffer = sys.stdin.read()
-                # buffer += '\n'
                 if len(buf):
                     buf += '\n'
                     client.send(buf.encode())
                     client.close()
                     send_stuff = False
+
                 else:
                     client.close()
                     # sys.exit(0)
@@ -57,43 +52,45 @@ class Netcat:
 
     def _server_loop(self, target=None, port=None):
         if not len(target):
-            target = '0.0.0.0'
+            target = '127.0.0.1'
 
+        global server
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((target,port))
         server.listen(5)
         loop = True
+
         while loop:
             client_socket, addr = server.accept()
-            # self._client_handler(client_socket=client_socket)
-            client_thread = threading.Thread(
-                target=self._client_handler(client_socket),
-                args=(client_socket)
-            )
-            client_thread.start()
-        client.close()
+            self._client_handler(client_socket)
+            client_socket.close()
+            loop = False
+
+        client_socket.close()
         sys.exit(9)
     def _client_handler(self, client_socket=None):
-        while True:
+    loop = True
+
+        while loop:
             try:
                 cmd_buffer = ''
                 while '\n' not in cmd_buffer:
                     cmd_buffer += client_socket.recv(4096)
                     response = self._run_command(cmd_buffer)
+                    client_socket.close()
+                    loop = False
 
             except:
                 print('[*] Session ended, exiting now')
-                sys.exit(0)
+                loop = False
 
     def _run_command(self, command=None):
         command = command.rstrip()
         print(command)
         try:
-            print(command)
             #output = call([str(command)])
             pid = subprocess.call(str(command), shell=True)
             print pid
-            print output
 
         except:
             output = "Failed to execute command\n"
@@ -101,10 +98,10 @@ class Netcat:
         return output
 
     def netcat(self, target=None, port=None, listen=False, buf=None):
-        if (not target) | (not port) | (not buf):
+        if (not target) | (not port):
             self.usage(cls='err')
 
-        if not listen and len(target) and port > 0:
+        if not listen and len(target) and port > 0 and buf:
             self._client_sender(target, port, buf)
 
         if listen:
