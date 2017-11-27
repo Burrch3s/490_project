@@ -70,7 +70,7 @@ class Netcat:
         client_socket.close()
         sys.exit(9)
     def _client_handler(self, client_socket=None):
-    loop = True
+        loop = True
 
         while loop:
             try:

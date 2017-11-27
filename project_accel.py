@@ -68,6 +68,7 @@ while True:
     # Establish NC connection
     # When spike occurs send command to run wav file
     x = Netcat()
+    target = sys.argv[1]
     # x.netcat(target='target', port=9999)
     # change netcat func to use variable as obj were sending
     ACCx = (readACCx() * 0.244) / 1000
