@@ -80,7 +80,8 @@ while loop:
         if ACCx >= 2 or ACCy >= 2 or ACCz >= 2:
             var = "./src/chuck playwav.ck"
             #send cmd
-            x.netcat(target=target, port=9999, buf=var)
+            x.netcat(target=target, port=9990, buf=var)
+            time.sleep(1)
 
     except KeyboardInterrupt:
         var = 'quit'
