@@ -218,14 +218,39 @@ while True:
 
     if 1:  # Change to '0' to stop  showing the angles from the gyro
         print ("\033[1;31;40m\tGRYX Angle %5.2f  GYRY Angle %5.2f  GYRZ Angle %5.2f" % (
-        gyroXangle, gyroYangle, gyroZangle)),
+            gyroXangle, gyroYangle, gyroZangle)),
 
     if 1:  # Change to '0' to stop  showing the angles from the complementary filter
         print ("\033[1;35;40m   \tCFangleX Angle %5.2f \033[1;36;40m  CFangleY Angle %5.2f \33[1;32;40m" % (
-        CFangleX, CFangleY)),
+            CFangleX, CFangleY)),
 
     if 1:  # Change to '0' to stop  showing the heading
         print ("HEADING  %5.2f \33[1;37;40m tiltCompensatedHeading %5.2f" % (heading, tiltCompensatedHeading))
 
+
     # slow program down a bit, makes the output more readable
     time.sleep(0.03)
+'''
+lol this sucks
+first open file to read
+then we detect ranges of tilt                           == s.freq
+we detect how long that the tilt remains in that range  == x or the counter
+
+then we add the first base line code to the file from below until the while loop
+then after detection and crap we add the while loop with counter vars to the file
+when ctrl+c hit we close the file and save it for chuck to play later
+
+SinOsc s => dac;
+1 => int x;
+while( x < 10 ) {
+        100::ms => now;
+//Std.rand2f(30.0, 1000.0) => s.freq;
+        1000.0 => s.freq;
+
+//      100::ms => now;
+        500.0 => s.freq;
+        x + 1 => x;
+        }
+
+
+'''
