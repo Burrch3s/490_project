@@ -71,6 +71,7 @@ while loop:
         ACCz = str((readACCz() * 0.244) / 1000)
 
         file.write("%s %s %s \n" % (ACCx, ACCy, ACCz))
+        time.sleep(0.05)
 
     except KeyboardInterrupt:
         print('Were done collecting data')
