@@ -9,9 +9,13 @@ synthesized or fed to the chuck program. :ok_hand:
 #TODO
 
 - finish first mode: interpret sudden acceleration into punches in chuck
-    solder berryIMU
+    write custom script to collect data and output to specific format
     collect sensor data
     present data and correlate data to gesture/movement
+
+    figure out networking for the classroom to allow 'wearable' feel to Pi
+        eth connection>>ssh connection to get dhcp addr of Pi in classroom
+        disconnect eth and hopefully it works, if not have process recorded
     
 - finish second mode: interpret tilt/rotation into increase in freq./amplitude
     (Pi side)

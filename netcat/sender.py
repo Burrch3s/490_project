@@ -2,11 +2,11 @@
 
 import sys
 import socket
-import threading
+# import threading
 import subprocess
 
-#TODO: fix lame broad try/excepts
-#TODO: send stuff until ctrl-c then close connection
+
+# TODO: fix lame broad try/excepts
 
 class Netcat:
     def __init__(self, listener=False, target=None, port=None):
@@ -17,7 +17,7 @@ class Netcat:
     @staticmethod
     def usage(cls):
         print(
-        ''' 
+            ''' 
         Usage: basic-netcat.py -t taget_host -p port
         -l --listen -listen on [host]:[port] for incoming connection
         -c initialize a command shell
@@ -32,13 +32,14 @@ class Netcat:
     def _client_sender(self, target=None, port=None, buf=None):
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
-            client.connect((target,port))
+            client.connect((target, port))
             # print("connected")
             send_stuff = True
+
             while send_stuff:
                 if len(buf):
                     buf += '\n'
-                    print("theres length here")
+                    #print("theres length here")
                     client.send(buf.encode())
 
                     if 'quit' in buf:
@@ -57,7 +58,7 @@ class Netcat:
                 send_stuff = False
                 return
 
-        except Exception as e: 
+        except Exception as e:
             print(e)
             # add better error handling?
             client.close()
@@ -65,26 +66,23 @@ class Netcat:
             sys.exit(0)
 
     def _server_loop(self, target=None, port=None):
-        if not len(target):
+        if not target:
             target = '0.0.0.0'
 
         global server
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.bind((target,port))
+        server.bind((target, port))
         server.listen(5)
-        loop = True
 
-        while loop:
+        while True:
             client_socket, addr = server.accept()
 
             if client_socket:
                 self._client_handler(client_socket)
-            # self._client_handler(client_socket)
-            # client_socket.close()
-            # loop = False
 
         client_socket.close()
         sys.exit(9)
+
     def _client_handler(self, client_socket=None):
         loop = True
 
@@ -105,8 +103,8 @@ class Netcat:
 
                     else:
                         return
-                    # client_socket.close()
-                    # loop = False
+                        # client_socket.close()
+                        # loop = False
 
             except Exception as e:
                 print(e)
@@ -122,17 +120,16 @@ class Netcat:
         command = command.rstrip()
         print(command)
         try:
-            #output = call([str(command)])
             pid = subprocess.call(str(command), shell=True)
             print pid
 
         except Exception as e:
             print(e)
             output = "Failed to execute command\n"
+
             return output
 
         return
-
 
     def netcat(self, target=None, port=None, listen=False, buf=None):
         if (not port):
@@ -145,4 +142,3 @@ class Netcat:
             self._server_loop(target, port)
 
         return 0
-        # self.usage(cls='err')
