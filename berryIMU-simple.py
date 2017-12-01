@@ -144,6 +144,24 @@ CFangleY = 0.0
 
 a = datetime.datetime.now()
 
+def write_file(length=10, freq=3500, first=False):
+    if first:
+        chuck = open("data2chuck.ck", "w")
+        chuck.write("""
+            SinOsc s => dac;
+            1 =>f int x;
+            while( x < %s ){
+            100::ms => now;
+            %s => s.freq;
+            x + 1 => x;
+            }
+    
+            """ % (length, freq))
+
+
+def calc(angle):
+
+
 while True:
 
     # Read the accelerometer,gyroscope and magnetometer values
@@ -228,8 +246,10 @@ while True:
         print ("HEADING  %5.2f \33[1;37;40m tiltCompensatedHeading %5.2f" % (heading, tiltCompensatedHeading))
 
 
+
+
     # slow program down a bit, makes the output more readable
-    time.sleep(0.03)
+    # time.sleep(0.03)
 '''
 lol this sucks
 first open file to read
