@@ -300,7 +300,7 @@ ranges:
     if track == 0:
         tmp = var
         var = var[0:12]
-        var = var + 'add '
+        var = var + '--add '
         var = var + tmp[16:]
 
         x.netcat(target=target, port=9990, buf=var)
