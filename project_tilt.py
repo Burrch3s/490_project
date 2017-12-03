@@ -33,6 +33,7 @@ import math
 from LSM9DS0 import *
 import datetime
 from netcat.sender import Netcat
+import sys
 
 bus = smbus.SMBus(1)
 
@@ -241,8 +242,6 @@ kalmanY = 0.0
 
 a = datetime.datetime.now()
 x = Netcat()
-global track
-track = 0
 
 # x.netcat(target=target, port=9990, buf=var)
 def tilt_to_pitch(tilt):
@@ -251,19 +250,20 @@ def tilt_to_pitch(tilt):
 #     -80 < 0 < 130 degree range
 #     26 degree range between each range
 
-'''
-ranges:
-    -80 - -54 tiltn_3-e.ck
-    -55 - -29 tiltn_2-f.ck
-    -29 - -4 tiltn_1-g.ck
-    -3 - 23 tiltn0-a.ck
-    24 - 50 tiltn1-b.ck
-    51 - 77 tiltn2-c.ck
-    78 - 104 tiltn3-d.ck
-    105 - 131 tiltn4-e.ck
-'''
+    '''
+    ranges:
+        -80 - -54 tiltn_3-e.ck
+        -55 - -29 tiltn_2-f.ck
+        -29 - -4 tiltn_1-g.ck
+        -3 - 23 tiltn0-a.ck
+        24 - 50 tiltn1-b.ck
+        51 - 77 tiltn2-c.ck
+        78 - 104 tiltn3-d.ck
+        105 - 131 tiltn4-e.ck
+    '''
 
-
+    global track
+    global target
     if tilt <= -54:
         var = "./src/chuck = 1 tiltn_3-e.ck"
         current = 1
@@ -311,6 +311,9 @@ ranges:
         return
     else:
         x.netcat(target=target, port=9990, buf=var)
+
+track = 0
+target = sys.argv[1]
 while True:
 
     # Read the accelerometer,gyroscope and magnetometer values
@@ -441,7 +444,7 @@ while True:
 
     # print a new line
     # print ""
-
+    print kalmanX
     tilt_to_pitch(kalmanX)
     # slow program down a bit, makes the output more readable
     time.sleep(0.03)
