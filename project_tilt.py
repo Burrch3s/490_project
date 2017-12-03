@@ -32,6 +32,7 @@ import time
 import math
 from LSM9DS0 import *
 import datetime
+from netcat.sender import Netcat
 
 bus = smbus.SMBus(1)
 
@@ -239,7 +240,77 @@ kalmanX = 0.0
 kalmanY = 0.0
 
 a = datetime.datetime.now()
+x = Netcat()
+global track
+track = 0
 
+# x.netcat(target=target, port=9990, buf=var)
+def tilt_to_pitch(tilt):
+#     there are 8 different pitches in A minor scale to play
+#     n_3 < n0 < n4 are the ranges
+#     -80 < 0 < 130 degree range
+#     26 degree range between each range
+
+'''
+ranges:
+    -80 - -54 tiltn_3-e.ck
+    -55 - -29 tiltn_2-f.ck
+    -29 - -4 tiltn_1-g.ck
+    -3 - 23 tiltn0-a.ck
+    24 - 50 tiltn1-b.ck
+    51 - 77 tiltn2-c.ck
+    78 - 104 tiltn3-d.ck
+    105 - 131 tiltn4-e.ck
+'''
+
+
+    if tilt <= -54:
+        var = "./src/chuck = 1 tiltn_3-e.ck"
+        current = 1
+
+    if (tilt < -29) and (tilt >= 55):
+        var = "./src/chuck = 1 tiltn_2-f.ck"
+        current = 2
+
+    if (tilt <= -4) and (tilt >= -29):
+        var = "./src/chuck = 1 tiltn_1-g.ck"
+        current = 3
+
+    if (tilt <= 23) and (tilt >= -3):
+        var = "./src/chuck = 1 tiltn0-a.ck"
+        current = 4
+
+    if (tilt <= 50) and (tilt >= 24):
+        var = "./src/chuck = 1 tiltn1-b.ck"
+        current = 5
+
+    if (tilt <= 77) and (tilt >= 51):
+        var = "./src/chuck = 1 tiltn2-c.ck"
+        current = 6
+
+    if (tilt <= 104) and (tilt >= 78):
+        var = "./src/chuck = 1 tiltn3-d.ck"
+        current = 7
+
+    if (tilt >= 105):
+        var = "./src/chuck = 1 tiltn4-e.ck"
+        current = 8
+
+    #first data being recorded
+    if track == 0:
+        tmp = var
+        var = var[0:12]
+        var = var + 'add '
+        var = var + tmp[16:]
+
+        x.netcat(target=target, port=9990, buf=var)
+        track = current
+        return
+
+    if track == current:
+        return
+    else:
+        x.netcat(target=target, port=9990, buf=var)
 while True:
 
     # Read the accelerometer,gyroscope and magnetometer values
@@ -257,7 +328,7 @@ while True:
     b = datetime.datetime.now() - a
     a = datetime.datetime.now()
     LP = b.microseconds / (1000000 * 1.0)
-    print "Loop Time | %5.2f|" % (LP),
+    # print "Loop Time | %5.2f|" % (LP),
 
     # Convert Gyro raw to degrees per second
     rate_gyr_x = GYRx * G_GAIN
@@ -351,25 +422,26 @@ while True:
     if tiltCompensatedHeading < 0:
         tiltCompensatedHeading += 360
 
-    if 1:  # Change to '0' to stop showing the angles from the accelerometer
-        print ("\033[1;34;40mACCX Angle %5.2f ACCY Angle %5.2f  \033[0m  " % (AccXangle, AccYangle)),
+    # if 1:  # Change to '0' to stop showing the angles from the accelerometer
+    #     print ("\033[1;34;40mACCX Angle %5.2f ACCY Angle %5.2f  \033[0m  " % (AccXangle, AccYangle)),
 
-    if 1:  # Change to '0' to stop  showing the angles from the gyro
-        print ("\033[1;31;40m\tGRYX Angle %5.2f  GYRY Angle %5.2f  GYRZ Angle %5.2f" % (
-        gyroXangle, gyroYangle, gyroZangle)),
+    # if 1:  # Change to '0' to stop  showing the angles from the gyro
+    #     print ("\033[1;31;40m\tGRYX Angle %5.2f  GYRY Angle %5.2f  GYRZ Angle %5.2f" % (
+    #     gyroXangle, gyroYangle, gyroZangle)),
 
-    if 1:  # Change to '0' to stop  showing the angles from the complementary filter
-        print ("\033[1;35;40m   \tCFangleX Angle %5.2f \033[1;36;40m  CFangleY Angle %5.2f \33[1;32;40m" % (
-        CFangleX, CFangleY)),
+    # if 1:  # Change to '0' to stop  showing the angles from the complementary filter
+    #     print ("\033[1;35;40m   \tCFangleX Angle %5.2f \033[1;36;40m  CFangleY Angle %5.2f \33[1;32;40m" % (
+    #     CFangleX, CFangleY)),
 
-    if 1:  # Change to '0' to stop  showing the heading
-        print ("HEADING  %5.2f \33[1;37;40m tiltCompensatedHeading %5.2f" % (heading, tiltCompensatedHeading)),
-
-    if 1:  # Change to '0' to stop  showing the angles from the Kalman filter
-        print ("\033[1;31;40m kalmanX %5.2f  \033[1;35;40m kalmanY %5.2f  " % (kalmanX, kalmanY)),
+    # if 1:  # Change to '0' to stop  showing the heading
+    #     print ("HEADING  %5.2f \33[1;37;40m tiltCompensatedHeading %5.2f" % (heading, tiltCompensatedHeading)),
+#[*] Use kalman filter
+    # if 1:  # Change to '0' to stop  showing the angles from the Kalman filter
+    #     print ("\033[1;31;40m kalmanX %5.2f  \033[1;35;40m kalmanY %5.2f  " % (kalmanX, kalmanY)),
 
     # print a new line
-    print ""
+    # print ""
 
+    tilt_to_pitch(kalmanX)
     # slow program down a bit, makes the output more readable
     time.sleep(0.03)
