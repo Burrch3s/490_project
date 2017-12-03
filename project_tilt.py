@@ -268,31 +268,31 @@ def tilt_to_pitch(tilt):
         var = "./src/chuck = 1 tiltn_3-e.ck"
         current = 1
 
-    if (tilt < -29) and (tilt >= 55):
+    if (tilt < -29) and (tilt >= -55):
         var = "./src/chuck = 1 tiltn_2-f.ck"
         current = 2
 
-    if (tilt <= -4) and (tilt >= -29):
+    if (tilt < -4) and (tilt >= -29):
         var = "./src/chuck = 1 tiltn_1-g.ck"
         current = 3
 
-    if (tilt <= 23) and (tilt >= -3):
+    if (tilt < 23) and (tilt >= -4):
         var = "./src/chuck = 1 tiltn0-a.ck"
         current = 4
 
-    if (tilt <= 50) and (tilt >= 24):
+    if (tilt < 50) and (tilt >= 23):
         var = "./src/chuck = 1 tiltn1-b.ck"
         current = 5
 
-    if (tilt <= 77) and (tilt >= 51):
+    if (tilt < 77) and (tilt >= 50):
         var = "./src/chuck = 1 tiltn2-c.ck"
         current = 6
 
-    if (tilt <= 104) and (tilt >= 78):
+    if (tilt < 104) and (tilt >= 77):
         var = "./src/chuck = 1 tiltn3-d.ck"
         current = 7
 
-    if (tilt >= 105):
+    if (tilt >= 104):
         var = "./src/chuck = 1 tiltn4-e.ck"
         current = 8
 
