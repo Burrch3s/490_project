@@ -306,11 +306,12 @@ def tilt_to_pitch(tilt):
         x.netcat(target=target, port=9990, buf=var)
         track = current
         return
-
+    print 'track %s current %s' % (track, current)
     if track == current:
         return
-    else:
+    if track != current:
         x.netcat(target=target, port=9990, buf=var)
+        track = current
 
 track = 0
 target = sys.argv[1]
@@ -444,7 +445,7 @@ while True:
 
     # print a new line
     # print ""
-    print kalmanX
+    #print kalmanX
     tilt_to_pitch(kalmanX)
     # slow program down a bit, makes the output more readable
     time.sleep(0.03)
