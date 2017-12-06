@@ -6,26 +6,50 @@ Then, the program will interpret a command to be sent wirelessly to my laptop (o
 netcat connection) where my receiving program shall execute the command and create/adjust sounds
 synthesized or fed to the chuck program. :ok_hand:
 
-#TODO
+#What is all this??
+    project_accel.py:
+        - one of the main projects, detects accelerometer sensor readings and sends off command
+            to run chuck to listener
+            
+    project_tilt.py:
+        - one of the main projects, detects tilt readings in degrees, maps them to ranges from -80 to
+            130 degrees into a note to be executed. Must have netcat listener on receiving system and
+            chuck running in headless mode by running chuck --loop
 
-- finish first mode: interpret sudden acceleration into punches in chuck
-    write custom script to collect data and output to specific format
-    collect sensor data
-    present data and correlate data to gesture/movement
-
-    figure out networking for the classroom to allow 'wearable' feel to Pi
-        eth connection>>ssh connection to get dhcp addr of Pi in classroom
-        disconnect eth and hopefully it works, if not have process recorded
+    netcat directory:
+        - contains netcat class that is used by project scripts to send off instructions
+        - should be either used by the project scripts themselves, or imported from python interpreter
+            (
+              calling from interpreter use cases are for setting up a listener to execute commands
+              or for sending off commands via buffer variable buf, interactive user input was removed
+              for script functionality
+            )
     
-- finish second mode: interpret tilt/rotation into increase in freq./amplitude
-    (Pi side)
-    detect then compile command into chuck program adjustment
-    (Laptop side)
-    execute chuck cmd and file
+    laptop-side directory:
+        - contains: wav files that chuck runs for punches, chuck scripts that are translated to chuck
+            opcodes and run by the chuck vm
+        - should be either used by calling the .ck scripts from the project .py files, or fed to chuck 
+            vm directly to test out :ok_hand:
+            
+    pi-side directory:
+        - contains ozzmaker default scripts that initialize the sensors and display data (we modify 
+            these scripts as seen in project_accel.py and project_tilt.py)
+            
+    LSM9DS0.py:
+        - contains important register and peripheral memory addresses used by project scripts
+    
+    data_collection.py/data_collection_tilt.py:
+        - modified project scripts to only detect sensor readings and write out to a file for latter
+            proccessing
+            
+    test.py:
+        - testing network connection from client to listener
+        
+#TODO
+ 
     
 #IMPROVEMENTS
-- solder berryIMU together, get battery pack for Pi to make it a crappy wearable (lol)
 - idk wait a bit come back and write more
-- write the second mode and allow seamless switching between the 2
+- allow seamless switching between the 2 modes
 - use some audio software to get rid of trail of silence before and after punch noise
-- fine tune difference between punch and not reg. movement
+- fine tune difference between punch and not reg. movement (velocity of changing tilt to note)
